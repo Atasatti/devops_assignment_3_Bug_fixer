@@ -35,20 +35,20 @@ RUN chown -R nodeuser:nodejs /usr/src/app
 # Switch to non-root user
 USER nodeuser
 
-# Expose port 3000
-EXPOSE 3000
+# Expose port 5050
+EXPOSE 5050
 
 # Set environment variables
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=5050
 
 # Health check to ensure container is running properly
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "const http = require('http'); http.get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }).on('error', () => { process.exit(1); });"
+    CMD node -e "const http = require('http'); http.get('http://localhost:5050/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }).on('error', () => { process.exit(1); });"
 
 # Command to run the application
 CMD ["npm", "start"]
 
 # Build instructions:
-# docker build -t devops-task-manager .
-# docker run -p 3000:3000 -e MONGODB_URI=mongodb://host.docker.internal:27017/devops_tasks devops-task-manager 
+# docker build -t ataulhaq490/bug-fixer .
+# docker run -p 5050:5050 -e MONGODB_URI=mongodb://host.docker.internal:27017/devops_tasks ataulhaq490/bug-fixer 

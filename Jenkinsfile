@@ -9,8 +9,8 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'afnankhan03/devops-task-manager:latest'
         CONTAINER_NAME = 'task-manager-test-container'
-        APP_PORT = '3000'
-        APP_URL = 'http://16.171.13.142:3000'
+        APP_PORT = '5050'
+        APP_URL = 'http://16.171.13.142:5050'
     }
     
     options {
@@ -53,7 +53,7 @@ pipeline {
         stage('Deploy App') {
             steps {
                 script {
-                    echo "🚀 Starting Task Manager application..."
+                    echo "🚀 Starting Bug Fixer application..."
                     
                     // Stop and remove any existing container
                     sh """
@@ -65,7 +65,7 @@ pipeline {
                     sh """
                         docker run -d \
                         --name ${CONTAINER_NAME} \
-                        -p ${APP_PORT}:3000 \
+                        -p ${APP_PORT}:5050 \
                         ${DOCKER_IMAGE}
                     """
                     
@@ -142,7 +142,7 @@ pipeline {
                 
                 // Generate detailed email report
                 def emailBody = """
-                <h2>🧪 Task Manager CI/CD Pipeline Results</h2>
+                <h2>🧪 Bug Fixer CI/CD Pipeline Results</h2>
                 <p><strong>Job:</strong> ${env.JOB_NAME}</p>
                 <p><strong>Build:</strong> #${env.BUILD_NUMBER}</p>
                 <p><strong>Status:</strong> ${currentBuild.currentResult}</p>
@@ -172,9 +172,9 @@ pipeline {
                 emailBody += "</table><h3>📊 Test Summary</h3>"
                 
                 // Parse test results if available
-                if (fileExists('target/surefire-reports/TEST-TaskManagerTest.xml')) {
+                if (fileExists('target/surefire-reports/TEST-BugFixerTest.xml')) {
                     try {
-                        def testXml = readFile('target/surefire-reports/TEST-TaskManagerTest.xml')
+                        def testXml = readFile('target/surefire-reports/TEST-BugFixerTest.xml')
                         
                         // Extract test suite attributes using regex
                         def testsMatch = (testXml =~ /tests="(\d+)"/)
@@ -248,7 +248,7 @@ pipeline {
             
             emailext (
                 to: "afnanajmal03@gmail.com",
-                subject: "🚀 Task Manager CI/CD - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                subject: "🚀 Bug Fixer CI/CD - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
                 body: env.EMAIL_BODY ?: "Build completed with status: ${currentBuild.currentResult}",
                 mimeType: 'text/html'
             )

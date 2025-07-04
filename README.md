@@ -1,14 +1,14 @@
 # DevOps Task Manager Application
 
 ## 🎯 Project Overview
-Task Manager web application built with Node.js, Express, and MongoDB Atlas for COMSATS University DevOps Course (CSC483).
+Bug Tracker web application built with Node.js, Express, and MongoDB Atlas for COMSATS University DevOps Course (CSC483).
 
 
 ## 🚀 Application Features
-- ✅ Create, Read, Update, Delete (CRUD) tasks
-- ✅ Task status management (pending, in-progress, completed)
+- ✅ Create, Read, Update, Delete (CRUD) bugs
+- ✅ Bug status management (pending, in-progress, completed)
 - ✅ Priority levels (low, medium, high)
-- ✅ Task filtering and search
+- ✅ Bug filtering and search
 - ✅ Responsive web interface
 - ✅ MongoDB Atlas integration
 - ✅ REST API endpoints
@@ -37,7 +37,7 @@ npm install
 
 # Create .env file
 echo "MONGODB_URI=your_mongodb_atlas_connection_string" > .env
-echo "PORT=3000" >> .env
+echo "PORT=5050" >> .env
 
 # Start application
 npm start
@@ -48,7 +48,7 @@ npm start
 # Build and run with Docker Compose
 docker-compose up -d
 
-# Application will be available at http://localhost:3000
+# Application will be available at http://localhost:5050
 ```
 
 ## 🌐 API Endpoints
@@ -56,11 +56,11 @@ docker-compose up -d
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/` | Home page |
-| GET | `/api/tasks` | Get all tasks |
-| GET | `/api/tasks/:id` | Get task by ID |
-| POST | `/api/tasks` | Create new task |
-| PUT | `/api/tasks/:id` | Update task |
-| DELETE | `/api/tasks/:id` | Delete task |
+| GET | `/api/bugs` | Get all bugs |
+| GET | `/api/bugs/:id` | Get bug by ID |
+| POST | `/api/bugs` | Create new bug |
+| PUT | `/api/bugs/:id` | Update bug |
+| DELETE | `/api/bugs/:id` | Delete bug |
 | GET | `/health` | Health check |
 
 ## 🚀 AWS EC2 Deployment
@@ -68,7 +68,7 @@ docker-compose up -d
 ### Prerequisites
 - AWS EC2 instance (t3.micro or larger)
 - Docker installed on EC2
-- Security group allowing port 3000
+- Security group allowing port 5050
 
 ### Deployment Steps
 ```bash
@@ -79,15 +79,8 @@ cd devops-app-repo
 # Deploy with Docker Compose
 docker-compose up -d
 
-# Application will be live at http://your-ec2-ip:3000
+# Application will be live at http://your-ec2-ip:5050
 ```
 
 ## 📊 MongoDB Atlas Configuration
-See `MONGODB_ATLAS_CONFIG.md` for detailed database setup instructions.
-
-## 🔗 Related Repositories
-- **Test Repository**: Contains Selenium test suite for this application
-- **CI/CD Pipeline**: Automated testing against live deployment
-
-## 📝 License
-Educational project for COMSATS University DevOps Course 
+See `

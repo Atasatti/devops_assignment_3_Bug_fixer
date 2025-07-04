@@ -7,17 +7,18 @@ version: '3.8'
 services:
   # Web Application (using MongoDB Atlas - no local MongoDB needed)
   app:
+    image: ataulhaq490/bug-fixer:latest
     build: .
-    container_name: devops-task-manager
+    container_name: devops-bug-tracker
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "5050:5050"
     environment:
       - NODE_ENV=production
-      - PORT=3000
-            - "MONGODB_URI=mongodb+srv://afnan:afnan@cluster0.jv1iq.mongodb.net/devops_tasks?retryWrites=true&w=majority&appName=Cluster0"
+      - PORT=5050
+      - MONGODB_URI=mongodb+srv://afnan:afnan@cluster0.jv1iq.mongodb.net/devops_tasks?retryWrites=true&w=majority&appName=Cluster0
     healthcheck:
-        test: ["CMD", "node", "-e", "const http = require('http'); http.get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }).on('error', () => { process.exit(1); });"]
+        test: ["CMD", "node", "-e", "const http = require('http'); http.get('http://localhost:5050/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }).on('error', () => { process.exit(1); });"]
         interval: 30s
         timeout: 10s
         retries: 3

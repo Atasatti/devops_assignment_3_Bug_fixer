@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5050;
 
 // Middleware
 app.use(cors());
@@ -25,7 +25,7 @@ mongoose.connect(MONGODB_URI, {
 });
 
 // Task Schema
-const taskSchema = new mongoose.Schema({
+const bugSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -56,7 +56,7 @@ const taskSchema = new mongoose.Schema({
     }
 });
 
-const Task = mongoose.model('Task', taskSchema);
+const Bug = mongoose.model('Bug', bugSchema);
 
 // Routes
 
@@ -66,64 +66,64 @@ app.get('/', (req, res) => {
 });
 
 // GET - All tasks
-app.get('/api/tasks', async (req, res) => {
+app.get('/api/bugs', async (req, res) => {
     try {
-        const tasks = await Task.find().sort({ createdAt: -1 });
-        res.json(tasks);
+        const bugs = await Bug.find().sort({ createdAt: -1 });
+        res.json(bugs);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
 // GET - Single task by ID
-app.get('/api/tasks/:id', async (req, res) => {
+app.get('/api/bugs/:id', async (req, res) => {
     try {
-        const task = await Task.findById(req.params.id);
-        if (!task) {
+        const bug = await Bug.findById(req.params.id);
+        if (!bug) {
             return res.status(404).json({ error: 'Task not found' });
         }
-        res.json(task);
+        res.json(bug);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
 // POST - Create new task
-app.post('/api/tasks', async (req, res) => {
+app.post('/api/bugs', async (req, res) => {
     try {
-        const task = new Task(req.body);
-        await task.save();
-        res.status(201).json(task);
+        const bug = new Bug(req.body);
+        await bug.save();
+        res.status(201).json(bug);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
 
 // PUT - Update task
-app.put('/api/tasks/:id', async (req, res) => {
+app.put('/api/bugs/:id', async (req, res) => {
     try {
-        const task = await Task.findByIdAndUpdate(
+        const bug = await Bug.findByIdAndUpdate(
             req.params.id,
             { ...req.body, updatedAt: new Date() },
             { new: true, runValidators: true }
         );
-        if (!task) {
+        if (!bug) {
             return res.status(404).json({ error: 'Task not found' });
         }
-        res.json(task);
+        res.json(bug);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
 
 // DELETE - Delete task
-app.delete('/api/tasks/:id', async (req, res) => {
+app.delete('/api/bugs/:id', async (req, res) => {
     try {
-        const task = await Task.findByIdAndDelete(req.params.id);
-        if (!task) {
+        const bug = await Bug.findByIdAndDelete(req.params.id);
+        if (!bug) {
             return res.status(404).json({ error: 'Task not found' });
         }
-        res.json({ message: 'Task deleted successfully', task });
+        res.json({ message: 'Task deleted successfully', bug });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

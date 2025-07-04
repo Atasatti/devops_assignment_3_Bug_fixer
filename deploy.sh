@@ -25,9 +25,9 @@ sleep 10
 
 # Check if application is running
 echo "🔍 Checking application status..."
-if curl -s http://localhost:3000/health > /dev/null; then
+if curl -s http://localhost:5050/health > /dev/null; then
     echo "✅ Application is running successfully!"
-    echo "🌐 Access your app at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):3000"
+    echo "🌐 Access your app at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):5050"
 else
     echo "❌ Application failed to start. Check logs:"
     docker-compose logs
