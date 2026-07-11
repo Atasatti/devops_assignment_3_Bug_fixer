@@ -41,6 +41,18 @@ pipeline {
             }
         }
         
+        stage('Build Application') {
+            steps {
+                script {
+                    echo "🏗️ Building application..."
+                    sh '''
+                        cd ${WORKSPACE}
+                        npm ci --only=production
+                    '''
+                }
+            }
+        }
+        
         stage('Pull Docker Image') {
             steps {
                 script {
@@ -95,9 +107,10 @@ pipeline {
                     echo "🧪 Running Selenium tests against ${APP_URL}"
                     
                     sh """
+                        cd ${WORKSPACE}/selenium-tests
                         docker run --rm \
                         --network host \
-                        -v \${PWD}:/usr/src/mymaven \
+                        -v ${WORKSPACE}/selenium-tests:/usr/src/mymaven \
                         -w /usr/src/mymaven \
                         markhobson/maven-chrome \
                         mvn test -DAPP_URL=${APP_URL}
@@ -106,9 +119,9 @@ pipeline {
             }
             post {
                 always {
-                    // Archive test results
-                    junit testResults: 'target/surefire-reports/TEST-*.xml', allowEmptyResults: true
-                    archiveArtifacts artifacts: 'target/surefire-reports/**/*', allowEmptyArchive: true
+                    // Archive test results from selenium-tests directory
+                    junit testResults: 'selenium-tests/target/surefire-reports/TEST-*.xml', allowEmptyResults: true
+                    archiveArtifacts artifacts: 'selenium-tests/target/surefire-reports/**/*', allowEmptyArchive: true
                 }
             }
         }
@@ -159,6 +172,7 @@ pipeline {
                 def stageResults = [
                     'Cleanup Workspace': '✅ Completed',
                     'Checkout': '✅ Completed',
+                    'Build Application': currentBuild.currentResult == 'SUCCESS' ? '✅ Completed' : '❌ Failed',
                     'Pull Docker Image': '✅ Completed', 
                     'Deploy App': currentBuild.currentResult == 'SUCCESS' ? '✅ Completed' : '❌ Failed',
                     'Run Selenium Tests': currentBuild.currentResult == 'SUCCESS' ? '✅ Completed' : '❌ Failed',
@@ -172,9 +186,9 @@ pipeline {
                 emailBody += "</table><h3>📊 Test Summary</h3>"
                 
                 // Parse test results if available
-                if (fileExists('target/surefire-reports/TEST-BugFixerTest.xml')) {
+                if (fileExists('selenium-tests/target/surefire-reports/TEST-BugFixerTest.xml')) {
                     try {
-                        def testXml = readFile('target/surefire-reports/TEST-BugFixerTest.xml')
+                        def testXml = readFile('selenium-tests/target/surefire-reports/TEST-BugFixerTest.xml')
                         
                         // Extract test suite attributes using regex
                         def testsMatch = (testXml =~ /tests="(\d+)"/)
